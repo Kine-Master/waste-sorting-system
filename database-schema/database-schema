@@ -1,0 +1,39 @@
+
+
+-- Step 1: Create the database
+CREATE DATABASE IF NOT EXISTS waste_sorting_system;
+USE waste_sorting_system;
+
+-- Step 2: Create 'sensors' table
+CREATE TABLE sensors (
+    sensor_id INT AUTO_INCREMENT PRIMARY KEY,
+    sensor_type VARCHAR(50),         -- e.g., 'Ultrasonic', 'Infrared', 'Moisture'
+    location VARCHAR(100),           -- e.g., 'Bin 1', 'Entrance'
+    last_maintenance_date DATE
+);
+
+-- Step 3: Create 'waste_levels' table
+CREATE TABLE waste_levels (
+    entry_id INT AUTO_INCREMENT PRIMARY KEY,
+    sensor_id INT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    waste_level FLOAT,               -- Percentage or height measurement
+    FOREIGN KEY (sensor_id) REFERENCES sensors(sensor_id)
+);
+
+-- Step 4: Create 'bin_status' table
+CREATE TABLE bin_status (
+    bin_id INT AUTO_INCREMENT PRIMARY KEY,
+    bin_name VARCHAR(50),           -- e.g., 'Plastic Bin'
+    current_status ENUM('Empty', 'Full', 'Overloaded'),
+    last_checked_time DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Step 5: Create 'waste_collection_schedule' table
+CREATE TABLE waste_collection_schedule (
+    schedule_id INT AUTO_INCREMENT PRIMARY KEY,
+    bin_id INT,
+    collection_time DATETIME,
+    status ENUM('Scheduled', 'Collected', 'Pending') DEFAULT 'Scheduled',
+    FOREIGN KEY (bin_id) REFERENCES bin_status(bin_id)
+);
