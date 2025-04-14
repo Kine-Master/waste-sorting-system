@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulate Arduino Data</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Simulate Arduino Data</h1>
+
+    <section>
+      <h2>Send Sensor</h2>
+      <form id="sensor-form">
+        <input type="text" id="sensor_type" placeholder="Sensor Type" required />
+        <input type="text" id="location" placeholder="Location" required />
+        <input type="date" id="last_maintenance_date" required />
+        <button type="submit">Send Sensor</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Send Waste Level</h2>
+      <form id="waste-form">
+        <input type="number" id="sensor_id" placeholder="Sensor ID" required />
+        <input type="number" step="0.1" id="waste_level" placeholder="Waste Level" required />
+        <button type="submit">Send Waste Level</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Send Bin Status</h2>
+      <form id="bin-form">
+        <input type="number" id="bin_id" placeholder="Bin ID" required />
+        <select id="current_status">
+          <option value="Empty">Empty</option>
+          <option value="Full">Full</option>
+          <option value="Overloaded">Overloaded</option>
+        </select>
+        <button type="submit">Send Bin Status</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Send Collection Schedule</h2>
+      <form id="schedule-form">
+        <label for="sched_bin_id">Bin ID:</label>
+        <input type="number" id="sched_bin_id" placeholder="Bin ID (e.g., 1, 2, 3 - must exist in database)" required>
+        <input type="datetime-local" id="collection_time" required />
+        <select id="status">
+          <option value="Scheduled">Scheduled</option>
+          <option value="Collected">Collected</option>
+          <option value="Pending">Pending</option>
+        </select>
+        <button type="submit">Send Schedule</button>
+      </form>
+    </section>
+
+    <div class="nav-button">
+      <a href="index.html" class="button">Go to Dashboard</a>
+    </div>
+
+  </div>
+
+  <script src="simulateData.js"></script>
+</body>
+</html>

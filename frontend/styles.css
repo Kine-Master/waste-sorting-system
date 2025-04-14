@@ -77,6 +77,21 @@ button:hover {
   background-color: #2563eb;
 }
 
+input, select {
+  padding: 8px;
+  margin: 5px 0 10px;
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
 @media (max-width: 600px) {
   .container {
     padding: 15px;
@@ -94,4 +109,57 @@ button:hover {
     font-size: 0.75rem;
     padding: 5px 10px;
   }
+}
+
+/* Alert styles */
+.alert {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 15px;
+  border-radius: 5px;
+  color: white;
+  z-index: 1000;
+  transition: opacity 0.5s;
+}
+
+.alert.success {
+  background-color: #4CAF50;
+}
+
+.alert.error {
+  background-color: #f44336;
+}
+
+.alert.fade-out {
+  opacity: 0;
+}
+
+/* Refresh button styles */
+.refresh-btn {
+  margin-left: 10px;
+  padding: 2px 10px;
+  font-size: 0.8em;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.refresh-btn:hover {
+  background-color: #e0e0e0;
+}
+
+/* Error message styles */
+.error {
+  color: #d32f2f;
+  padding: 10px;
+  background-color: #ffebee;
+  border-radius: 4px;
+  margin: 5px 0;
+}
+
+.error button {
+  margin-left: 10px;
+  padding: 2px 8px;
 }
