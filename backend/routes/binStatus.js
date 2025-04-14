@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { pool } = require('../db');
 
+// Get current bin status
 router.get('/', async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM bin_status');
@@ -12,24 +13,24 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/simulate', async (req, res) => {
+// Update bin status from Arduino
+router.post('/', async (req, res) => {
+  const { bin_id, current_status } = req.body;
+  const now = new Date();
+
+  if (!bin_id || !current_status) {
+    return res.status(400).json({ error: 'bin_id and current_status are required.' });
+  }
+
   try {
-    const statuses = ['Empty', 'Full', 'Overloaded'];
-    const now = new Date();
-    const updates = [
-      { bin_id: 1, status: statuses[Math.floor(Math.random() * 3)] },
-      { bin_id: 2, status: statuses[Math.floor(Math.random() * 3)] }
-    ];
-    for (const bin of updates) {
-      await pool.query(
-        'UPDATE bin_status SET current_status = ?, last_checked_time = ? WHERE bin_id = ?',
-        [bin.status, now, bin.bin_id]
-      );
-      console.log('Simulated bin status updated:', bin);
-    }
-    res.json({ message: 'Simulated bin status updated' });
+    await pool.query(
+      'UPDATE bin_status SET current_status = ?, last_checked_time = ? WHERE bin_id = ?',
+      [current_status, now, bin_id]
+    );
+    console.log('Bin status updated from Arduino:', { bin_id, current_status });
+    res.json({ message: 'Bin status updated successfully.' });
   } catch (err) {
-    console.error('Error simulating bin status:', err);
+    console.error('Error updating bin status:', err);
     res.status(500).json({ error: err.message });
   }
 });

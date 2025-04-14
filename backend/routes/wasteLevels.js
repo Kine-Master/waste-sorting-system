@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { pool } = require('../db');
 
+// Get recent waste level readings
 router.get('/', async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM waste_levels ORDER BY timestamp DESC LIMIT 10');
@@ -12,22 +13,23 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/simulate', async (req, res) => {
+// Insert a new waste level reading from Arduino
+router.post('/', async (req, res) => {
+  const { sensor_id, waste_level } = req.body;
+
+  if (!sensor_id || waste_level === undefined) {
+    return res.status(400).json({ error: 'sensor_id and waste_level are required.' });
+  }
+
   try {
-    const levels = [
-      { sensor_id: 1, waste_level: (Math.random() * 60 + 20).toFixed(1) },
-      { sensor_id: 2, waste_level: (Math.random() * 60 + 20).toFixed(1) }
-    ];
-    for (const entry of levels) {
-      await pool.query(
-        'INSERT INTO waste_levels (sensor_id, waste_level) VALUES (?, ?)',
-        [entry.sensor_id, entry.waste_level]
-      );
-      console.log('Simulated waste level inserted:', entry);
-    }
-    res.json({ message: 'Simulated waste levels stored' });
+    await pool.query(
+      'INSERT INTO waste_levels (sensor_id, waste_level) VALUES (?, ?)',
+      [sensor_id, waste_level]
+    );
+    console.log('Waste level inserted from Arduino:', { sensor_id, waste_level });
+    res.json({ message: 'Waste level inserted successfully.' });
   } catch (err) {
-    console.error('Error simulating waste levels:', err);
+    console.error('Error inserting waste level:', err);
     res.status(500).json({ error: err.message });
   }
 });

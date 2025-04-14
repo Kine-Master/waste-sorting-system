@@ -52,7 +52,7 @@ async function initializeDatabase() {
       CREATE TABLE IF NOT EXISTS bin_status (
         bin_id INT AUTO_INCREMENT PRIMARY KEY,
         bin_name VARCHAR(50),
-        current_status ENUM('Empty', 'Full', 'Overloaded'),
+        current_status ENUM('Empty', 'Full', 'Overloaded') DEFAULT 'Empty',
         last_checked_time DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
@@ -68,6 +68,21 @@ async function initializeDatabase() {
     `);
 
     console.log('Database schema initialized successfully');
+
+    // Populate bin_status with initial data if it's empty
+    const [binStatusRows] = await pool.promise().query('SELECT COUNT(*) AS count FROM bin_status');
+    if (binStatusRows[0].count === 0) {
+      await pool.promise().query(`
+        INSERT INTO bin_status (bin_name) VALUES
+        ('Bin 1'),
+        ('Bin 2'),
+        ('Bin 3');
+      `);
+      console.log('Initial bin_status data populated.');
+    } else {
+      console.log('bin_status table already has data.');
+    }
+
   } catch (error) {
     console.error('Database initialization failed:', error);
     throw error;
